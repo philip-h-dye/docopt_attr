@@ -1,0 +1,5 @@
+exclude aaa log src s
+prune log
+prune aaa
+prune src
+prune s

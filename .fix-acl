@@ -1,0 +1,12 @@
+#!/bin/bash
+
+find . -depth -name __pycache__ -exec rm -rf \{\} \;
+
+( yes | clean -o . * */* 2>&1 ) > /dev/null
+
+acl set -p -r .
+
+chmod +x timestamp/command.py tests/test_*.py
+
+find . -name '*.sh' -exec chmod +x \{\} \+
+
