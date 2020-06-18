@@ -1,5 +1,5 @@
-exclude aaa log src s
-prune log
+exclude aaa log src s .alias
 prune aaa
+prune log
 prune src
 prune s
