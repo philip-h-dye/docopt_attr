@@ -46,12 +46,14 @@ def docattr(doc, argv=None, help=True, version=None, options_first=False):
        All else remains the same.  Attributes are single values or lists
        as appropriate.
 
+       Original docopt args object args._docopt.
+
        <docopt-doc>
     """
 
     args = docopt(doc, argv, help, version, options_first)
 
-    clean = { }
+    clean = { '_docopt' : args }
 
     for key in args :
         value = args[key]
