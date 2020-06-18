@@ -4,9 +4,11 @@ docopt with options as attributes rather than dictionary elements
 
 A simple wrapper around docopt that maps the args dictionary elements to attributes.
 
-Isn't args.file nicer than args['<file>'] ?
+Isn't arguments.file nicer than arguments['<file>'] ?
 
-Given this doc passed to docopt :
+### Usage
+
+Given example.py :
 
 ```
 """
@@ -24,30 +26,30 @@ Optional arguments :
   -V, --version  Show program version and exit.
   -i             Ignore
 """
+
+import docopt_attr
+
+from docopt_attr import docopt_attr
+
+if __name__ == '__main__':
+    arguments = docopt_attr(__doc__, version='0.1.0')
+    for key, value in arguments.__dict__.items() :
+        if not key.startswith('_') :
+            print(f"arguments.{key:<16}  =  {value}")
 ```
 
-And calling docopt_attr thus :
+`example` executed thus :
 
 ```
-argv = [ '--verbose', '--out=foobar', '-q', '-i', 'abc', 'foo', 'bar' ]
-
-args = docopt_attr(__doc__, argv.copy(), version='0.1.5', options_first=True )
-```
-
-Specified arguments :
-
-```
-assert args.verbose == True
-assert args.out == 'foobar'
-assert args.quiet == True
-assert args.i == True
-assert args.file == [ 'abc' == 'foo' == 'bar' ]
-```
-
-Unspecified arguments :
-```
-assert args.no_show == False
-assert args.debug == False
-assert args.version == False
+% example --verbose --out=foobar -q -i abc foo bar
+arguments.out               =  foobar
+arguments.help              =  False
+arguments.debug             =  False
+arguments.i                 =  True
+arguments.version           =  False
+arguments.verbose           =  True
+arguments.no_show           =  False
+arguments.quiet             =  True
+arguments.file              =  ['abc', 'foo', 'bar']
 
 ```
