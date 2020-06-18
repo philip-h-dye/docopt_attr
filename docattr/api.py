@@ -25,9 +25,6 @@ class AttributeConfig(Mapping):
     def __iter__(self):
         return iter(self.__dict__)
 
-    def __contains__(self, value):
-        return value in self.__dict__.values()
-
     def __str__(self):
         return ( "AttributeConfig(" +
                  ", ".join([ f'{k}={repr(v)}' for k,v in self.__dict__.items() ]) +
