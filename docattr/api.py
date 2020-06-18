@@ -9,19 +9,25 @@ from collections.abc import Mapping
 #------------------------------------------------------------------------------
 
 class AttributeConfig(Mapping):
+
     def __init__(self, *args, **kwargs):
         # self.attr = [ ]
         for key, value in kwargs.items() :
             setattr(self, key, value)
             # self.attr.append(key)
+
     def __getitem__(self, key):
         return self.__dict__[key]
+
     def __len__(self):
         return len(self.__dict__)
+
     def __iter__(self):
         return iter(self.__dict__)
+
     def __contains__(self, value):
         return value in self.__dict__.values()
+
     def __str__(self):
         return ( "AttributeConfig(" +
                  ", ".join([ f'{k}={repr(v)}' for k,v in self.__dict__.items() ]) +
@@ -49,6 +55,7 @@ def docattr(doc, argv=None, help=True, version=None, options_first=False):
     args = docopt(doc, argv, help, version, options_first)
 
     clean = { }
+
     for key in args :
         value = args[key]
         if key.startswith('--') :
