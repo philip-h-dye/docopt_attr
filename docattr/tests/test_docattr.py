@@ -13,9 +13,7 @@ Optional arguments :
   -d, --debug    Show debugging details.
   -h, --help     Show this help message and exit.
   -V, --version  Show program version and exit.
-
-NOT YET IMPLEMENTED :
-X -s, --silent   Silence STDOUT.  Output only to <log-file> (-q -n).
+  -i             Ignore
 """
 
 #------------------------------------------------------------------------------
@@ -32,21 +30,35 @@ from docattr import docattr
 
 class Test_Case ( unittest.TestCase ) :
 
-    def setUp ( self ) :
-        argv = [ '--verbose', '--out=foobar', '-q', 'abc', 'foo', 'bar' ]
+    def setUp(self):
+        argv = [ '--verbose', '--out=foobar', '-q', '-i', 'abc', 'foo', 'bar' ]
         self.args = docattr(__doc__, argv.copy(), version='0.1.5', options_first=True )
 
-    def test_001_doc ( self ) :
-        self.assertTrue ( len(docattr.__doc__) > 30 )
+    def test_000_doc ( self ) :
+        self.assertIn ( "creates your command-line interface", docattr.__doc__ )
 
-    def test_002_args ( self ) :
+    def test_001_boolean_option__verbose ( self ) :
+        self.assertEqual ( self.args.verbose, True )
 
-        self.assertEqual ( self.args.out		, 'foobar' )
-        self.assertEqual ( self.args.no_show	, False )
-        self.assertEqual ( self.args.quiet		, True )
-        self.assertEqual ( self.args.verbose	, True )
-        self.assertEqual ( self.args.debug		, False )
-        self.assertEqual ( self.args.version	, False )
-        self.assertEqual ( self.args.file		, [ 'abc', 'foo', 'bar' ] )
+    def test_002_valued_option__out ( self ) :
+        self.assertEqual ( self.args.out, 'foobar' )
+
+    def test_003_boolean_option_short__quiet ( self ) :
+        self.assertEqual ( self.args.quiet, True )
+
+    def test_004_boolean_option_short_only__i ( self ) :
+        self.assertEqual ( self.args.i, True )
+
+    def test_005_value_list__file ( self ) :
+        self.assertEqual ( self.args.file, [ 'abc', 'foo', 'bar' ] )
+
+    def test_006_unspecified_boolean__no_show ( self ) :
+        self.assertEqual ( self.args.no_show, False )
+
+    def test_007_unspecified_boolean__debug ( self ) :
+        self.assertEqual ( self.args.debug, False )
+
+    def test_008_unspecified_boolean__version ( self ) :
+        self.assertEqual ( self.args.version, False )
 
 #------------------------------------------------------------------------------
