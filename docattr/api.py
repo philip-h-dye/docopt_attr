@@ -57,15 +57,19 @@ def docattr(doc, argv=None, help=True, version=None, options_first=False):
 
     for key in args :
         value = args[key]
+        if key.startswith('<') and key.endswith('>') :
+            key = key[1:][:-1]
+            # print(f": -- {key:<16s} : {repr(value)}")
         if key.startswith('--') :
             key = key[2:]
             # print(f": -- {key:<16s} : {repr(value)}")
-        elif key.startswith('<') and key.endswith('>') :
-            key = key[1:][:-1]
+        if key.startswith('-') :
+            key = key[1:]
             # print(f": -- {key:<16s} : {repr(value)}")
-        else :
-            raise ValueError("Unrecognized option name '{key}'")
         key = key.replace('-', '_')
+        if not key.isidentifier() :
+            raise ValueError("Cleaned key '{key}' is not an valid identifier.\n"
+                             "This is a docattr internal error.  Please report this to the maintainer.")
         clean [ key ] = value
 
     return AttributeConfig(**clean)
