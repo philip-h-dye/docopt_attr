@@ -35,7 +35,7 @@ class AttributeConfig(Mapping):
 
 #------------------------------------------------------------------------------
 
-def docattr(doc, argv=None, help=True, version=None, options_first=False):
+def docopt_attr(doc, argv=None, help=True, version=None, options_first=False):
 
     """docopt with options in attributes rather than dictionary elements
 
@@ -69,11 +69,11 @@ def docattr(doc, argv=None, help=True, version=None, options_first=False):
         key = key.replace('-', '_')
         if not key.isidentifier() :
             raise ValueError("Cleaned key '{key}' is not an valid identifier.\n"
-                             "This is a docattr internal error.  Please report this to the maintainer.")
+                             "This is a docopt_attr internal error.  Please report this to the maintainer.")
         clean [ key ] = value
 
     return AttributeConfig(**clean)
         
-docattr.__doc__ = docattr.__doc__.replace('<docopt-doc>', docopt.__doc__ )
+docopt_attr.__doc__ = docopt_attr.__doc__.replace('<docopt-doc>', docopt.__doc__ )
 
 # ------------------------------------------------------------------------------

@@ -24,7 +24,7 @@ import sys
 
 from docopt import docopt
 
-from docattr import docattr
+from docopt_attr import docopt_attr
 
 #------------------------------------------------------------------------------
 
@@ -32,10 +32,10 @@ class Test_Case ( unittest.TestCase ) :
 
     def setUp(self):
         argv = [ '--verbose', '--out=foobar', '-q', '-i', 'abc', 'foo', 'bar' ]
-        self.args = docattr(__doc__, argv.copy(), version='0.1.5', options_first=True )
+        self.args = docopt_attr(__doc__, argv.copy(), version='0.1.5', options_first=True )
 
     def test_000_doc ( self ) :
-        self.assertIn ( "creates your command-line interface", docattr.__doc__ )
+        self.assertIn ( "creates your command-line interface", docopt_attr.__doc__ )
 
     def test_001_boolean_option__verbose ( self ) :
         self.assertEqual ( self.args.verbose, True )
