@@ -11,16 +11,13 @@ version     = re.search("^__version__\s*=\s*'(.*)'",
 setup (
     name = pypi_name,
     version = version,
-    description = f'docopt with options as attributes rather than dictionary elements'
+    description = 'docopt with options as attributes rather than dictionary elements',
     author = 'Philip H. Dye',
     author_email = 'philip@acm.org',
     url = f'https://www.github.com/philip-d-dye/{pypi_name}',
     long_description = Path('README.txt').read_text(),
-    packages = (pypi_name),
-    license_files = ( 'LICENSE' ),
+    packages = (package,),
+    license_files = ( 'LICENSE', ),
     install_requires = ( 'docopt',),
     tests_require=('pytest','pytest-runner'),
-    entry_points = {
-        'console_scripts': ( f'{command} = {package}:main',
-                           ) },
 )
