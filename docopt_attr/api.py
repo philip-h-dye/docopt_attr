@@ -5,34 +5,27 @@ import re
 
 from docopt import docopt
 
-from collections.abc import Mapping
+from collections import UserDict
 
 
-class AttributeConfig(Mapping):
+class AttributeConfig(UserDict):
 
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items() :
             setattr(self, key, value)
 
-    def __getitem__(self, key):
-        return self.__dict__[key]
-
-    def __len__(self):
-        return len(self.__dict__)
-
-    def __iter__(self):
-        return iter(self.__dict__)
-
     def __str__(self):
-        return ( "AttributeConfig(" +
+        s = ( "AttributeConfig(" +
                  ", ".join([ f'{k}={repr(v)}' for k,v in self.__dict__.items() ]) +
                  ")" )
+        return s.replace('\n', '')
 
     def __repr__(self):
         return self.__str__()
 
 
-def docopt_attr(doc, argv=None, help=True, version=None, options_first=False):
+def docopt_attr(doc, argv=None, help=True, version=None, options_first=False,
+                _test_cleaned_not_identifier = False):
 
     """docopt with options in attributes rather than dictionary elements
 
@@ -57,26 +50,27 @@ def docopt_attr(doc, argv=None, help=True, version=None, options_first=False):
         value = args[key]
         if key.startswith('<') and key.endswith('>') :
             key = key[1:][:-1]
-            # print(f": -- {key:<16s} : {repr(value)}")
-        if key.startswith('--') :
-            key = key[2:]
-            # print(f": -- {key:<16s} : {repr(value)}")
-        if key.startswith('-') :
-            key = key[1:]
-            # print(f": -- {key:<16s} : {repr(value)}")
         key = key.replace('-', '_')
-
         # Replace any remaining non-identifier characters with underscore
         if not key.isidentifier() :
-            key = re.sub(r'[^A-Za-z_]','_',key)
-        if not key.isidentifier() :
-            raise ValueError(f"Cleaned '{key}' is not an valid identifier.\n"
-                             f"This occurred when converting '{original_key}'.\n"
-                             f"This is a docopt_attr internal error.\n"
-                             f"Please report this to the maintainer at github.")
-        if key in clean :
+            key = re.sub(r'[^A-Za-z_]', '_', key)
+        # Collapse multiple underscores into a single underscore
+        while '__' in key:
+            key = key.replace('__', '_')
+        # Strip leading and trailing underscores
+        if key.startswith('_') :
+            key = key[1:]
+        if key.endswith('_') :
+            key = key[:-1]
+
+        if key in clean:
             raise ValueError(f"Duplicate key '{key}' found converting '{original_key}' "
                              f"to an attribute.\nPlease adjust your docstring to resolve.")
+
+        if not key.isidentifier() or _test_cleaned_not_identifier:
+            raise ValueError(f"INTERNAL ERROR : Cleaned '{key}' is not an valid identifier.\n"
+                             f"Occurred when converting '{original_key}'.\n"
+                             f"Please report this to the maintainer at github.")
 
         clean [ key ] = value
 
