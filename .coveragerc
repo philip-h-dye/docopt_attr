@@ -1,2 +1,15 @@
+[run]
+
+  source = src/docopt_attr
+  
 [report]
-show_missing=true
+
+  show_missing = true
+
+  # Regexes for lines to exclude from consideration
+  exclude_lines =
+    print(f"Prepended to sys.path :")
+    print(f"  {here = }")
+    for lib in libs:
+        print(f"  {lib  = }")
+    print()
