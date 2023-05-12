@@ -178,7 +178,7 @@ def test(c, main=False):
         ) if os.path.exists(main_args) else ''
         verbose_run(c, "python -m {} {} ".format(package, main_args))
     else:
-        verbose_run(c, "python setup.py test")
+        verbose_run(c, "pytest")
 
     separator()
 
